@@ -11,7 +11,7 @@
  *
  * ## constraints
  * - Both algorithms are frozen. These are the exact functions Aspect's released
- *   0.3.0 artwork was rendered with, and `test/mesh-gradients.test.mjs` compares
+ *   0.3.0 artwork was rendered with, and `test/fluid-gradients.test.mjs` compares
  *   a render byte-for-byte against that shipped image. Swapping in a "better"
  *   hash or a stronger PRNG — or reordering the mixing steps — changes every
  *   image every seed has ever produced and reshuffles which palette each seed

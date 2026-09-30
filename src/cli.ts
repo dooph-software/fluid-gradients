@@ -1,5 +1,5 @@
 /*
- * cli — the `mesh-gradient` command: parse flags, render one image, write it out.
+ * cli — the `fluid-gradient` command: parse flags, render one image, write it out.
  *
  * ## behavior
  * - Parser config, help text and the options object are all derived from the
@@ -43,7 +43,7 @@ export const helpText = (() => {
   );
   const line = (f: { flag: string; placeholder: string; describe: string }) =>
     `  ${`--${f.flag} ${f.placeholder}`.trimEnd().padEnd(width)}  ${f.describe}`;
-  return `Usage: mesh-gradient [options]
+  return `Usage: fluid-gradient [options]
 
 Every flag is optional. With none, writes one WebP with a random seed and a
 palette picked from that seed.

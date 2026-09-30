@@ -11,4 +11,4 @@ Some source files open with a block comment containing `## behavior` and `## con
 ## Skills
 
 - `.claude/skills/` — for working **on** this repo: adding palettes, and how the rendering algorithms work. Load them before touching `src/palettes.ts`, `src/render.ts`, `src/random.ts` or `src/color.ts`.
-- `skills/` — shipped **with** the package for consumers, installed via `npx mesh-gradients-init-skills`. Edit these when the public API changes.
+- `skills/` — shipped **with** the package for consumers, installed via `npx fluid-gradients-init-skills`. Edit these when the public API changes.

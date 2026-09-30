@@ -19,13 +19,13 @@ const blocks = [...readFileSync(readme, 'utf8').matchAll(/```ts\n([\s\S]*?)```/g
 
 if (blocks.length === 0) throw new Error('No ```ts blocks found in README.md — check the parser.');
 
-const dir = mkdtempSync(join(tmpdir(), 'mesh-readme-'));
+const dir = mkdtempSync(join(tmpdir(), 'fluid-readme-'));
 const srcFrom = (file) => relative(dirname(file), join(root, 'src')).replaceAll('\\', '/');
 const files = blocks.map((block, i) => {
   const file = join(dir, `readme-${i + 1}.ts`);
   // Matches either quote style, and the /palettes subpath as well as the root.
   const code = block.replace(
-    /(['"])@dooph-software\/mesh-gradients(\/[\w-]+)?\1/g,
+    /(['"])@dooph-software\/fluid-gradients(\/[\w-]+)?\1/g,
     (_match, quote, subpath) => `${quote}${srcFrom(file)}${subpath ?? '/index'}${quote}`,
   );
   writeFileSync(file, code);

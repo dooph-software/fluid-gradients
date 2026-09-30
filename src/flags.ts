@@ -14,7 +14,7 @@
  * - The two `satisfies { [K in keyof ...]: FlagSpec<...> }` clauses are the
  *   whole point of the file, not annotations. They make adding a render option
  *   to `MeshGradientOptions` or a knob to `GradientLook` fail `npm run lint`
- *   until it has a flag here, which is what keeps `mesh-gradient --foo` and
+ *   until it has a flag here, which is what keeps `fluid-gradient --foo` and
  *   `generateMeshGradient({ foo })` from drifting apart. Deleting one to quiet
  *   an error removes the check that was reporting it.
  * - Flag definitions live here and nowhere else. A flag added directly to the

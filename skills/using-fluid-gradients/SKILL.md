@@ -1,9 +1,9 @@
 ---
-name: using-mesh-gradients
-description: Use when generating, storing, serving, or displaying gradient images or palette colors in a project that depends on @dooph-software/mesh-gradients — cover art, hero backgrounds, avatars, placeholders, OG images, or accent chips that should match a gradient.
+name: using-fluid-gradients
+description: Use when generating, storing, serving, or displaying gradient images or palette colors in a project that depends on @dooph-software/fluid-gradients — cover art, hero backgrounds, avatars, placeholders, OG images, or accent chips that should match a gradient.
 ---
 
-# Using @dooph-software/mesh-gradients
+# Using @dooph-software/fluid-gradients
 
 An image is a pure function of **seed + palette + aspect ratio + look**. Store those, not just the seed, and the image is reproducible forever.
 
@@ -22,7 +22,7 @@ If "must never change" is a hard requirement, also store the rendered bytes. The
 
 ```ts
 // server-only module — rendering needs Node (native canvas + sharp)
-import { generateMeshGradient } from '@dooph-software/mesh-gradients';
+import { generateMeshGradient } from '@dooph-software/fluid-gradients';
 
 const { buffer, palette, accent } = await generateMeshGradient({ seed: post.slug, width: 1200, height: 630 });
 // persist: seed, palette.name, 1200×630, accent — and buffer, if immutability is required
@@ -30,7 +30,7 @@ const { buffer, palette, accent } = await generateMeshGradient({ seed: post.slug
 
 ```ts
 // client / edge-safe — zero dependencies, no rendering
-import { findPalette, paletteAccent, paletteComplement } from '@dooph-software/mesh-gradients/palettes';
+import { findPalette, paletteAccent, paletteComplement } from '@dooph-software/fluid-gradients/palettes';
 const palette = findPalette(post.gradientPalette);
 const chip = paletteAccent(palette);
 const contrastChip = paletteComplement(palette); // opposite hue, vivid — stands out on the image
@@ -39,7 +39,7 @@ const contrastChip = paletteComplement(palette); // opposite hue, vivid — stan
 ## Quick reference
 
 - **Custom palettes or a project-wide default size:** `createMeshGradients({ palettes, width, height })` in one module, exported and reused.
-- **Browse palettes:** `npx mesh-gradient --list-palettes`; one-off images: `npx mesh-gradient --seed x --palette y`.
+- **Browse palettes:** `npx fluid-gradient --list-palettes`; one-off images: `npx fluid-gradient --seed x --palette y`.
 - **Draw on top before encoding:** `renderMeshGradient` returns the canvas.
 
 ## Common mistakes

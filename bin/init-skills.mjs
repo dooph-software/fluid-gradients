@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
  * bin/init-skills.mjs — copy the bundled agent skills into a consuming project.
- * npm bin: mesh-gradients-init-skills
+ * npm bin: fluid-gradients-init-skills
  *
  * From a project that has installed the package:
- *   npx mesh-gradients-init-skills
+ *   npx fluid-gradients-init-skills
  *
  * Mirrors @dooph-software/design-system's init-skills. The bin name is prefixed
  * because both packages would otherwise claim node_modules/.bin/init-skills in a
@@ -50,7 +50,7 @@ const ask = async (question) => {
 };
 
 async function main() {
-  console.log(`\n${bold('@dooph-software/mesh-gradients')}${dim(' · init-skills')}\n`);
+  console.log(`\n${bold('@dooph-software/fluid-gradients')}${dim(' · init-skills')}\n`);
 
   if (!existsSync(PKG_SKILLS)) {
     console.error('  ✗ skills/ not found in the installed package. Try reinstalling it.');

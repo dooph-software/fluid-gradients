@@ -1,9 +1,9 @@
-# @dooph-software/mesh-gradients
+# @dooph-software/fluid-gradients
 
-Deterministic, seeded mesh-gradient images plus a curated set of <!-- docs:begin:palette-count -->71<!-- docs:end:palette-count --> color palettes. The same seed, palette, size and look always render the same image.
+Deterministic, seeded fluid-gradient images plus a curated set of <!-- docs:begin:palette-count -->71<!-- docs:end:palette-count --> color palettes. The same seed, palette, size and look always render the same image.
 
 ```bash
-npm install @dooph-software/mesh-gradients
+npm install @dooph-software/fluid-gradients
 ```
 
 generate on demand
@@ -17,7 +17,7 @@ npm run gradient -- --palette jewel-peacock --seed gradient --width 700 --height
 To help your coding agent use this package correctly (what to store per image, server vs. client imports, how size affects the composition), copy the bundled skills into your project:
 
 ```bash
-npx mesh-gradients-init-skills
+npx fluid-gradients-init-skills
 ```
 
 It asks which agent directories to install to (`.agents/`, `.claude/`, `.agent/`) and changes nothing else.
@@ -49,7 +49,7 @@ import {
   paletteAccent,
   paletteComplement,
   complementColor,
-} from "@dooph-software/mesh-gradients/palettes";
+} from "@dooph-software/fluid-gradients/palettes";
 
 findPalette("mint-sea"); // { name: 'mint-sea', colors: [...] }. Throws on unknown names
 pickPalette("autocad-0.3.0"); // deterministic pick from any seed string
@@ -80,7 +80,7 @@ To use your own palettes, create a generator bound to your set. Put it in a modu
 import {
   colorPalettes,
   createMeshGradients,
-} from "@dooph-software/mesh-gradients";
+} from "@dooph-software/fluid-gradients";
 
 export const gradients = createMeshGradients({
   palettes: [
@@ -107,7 +107,7 @@ Rendering runs in Node and uses `@napi-rs/canvas` (compositing, PNG) and `sharp`
 
 ```ts
 import { writeFileSync } from "node:fs";
-import { generateMeshGradient } from "@dooph-software/mesh-gradients";
+import { generateMeshGradient } from "@dooph-software/fluid-gradients";
 
 const { buffer, palette, accent } = await generateMeshGradient({
   seed: "autocad-0.3.0",
@@ -139,15 +139,15 @@ Every flag is optional. With none, it writes one WebP to `output/` with a random
 
 ```bash
 npm run gradient                       # in this repo (builds first, then runs the CLI)
-npx mesh-gradient                      # anywhere the package is installed
+npx fluid-gradient                      # anywhere the package is installed
 npm run gradient -- --seed hero --palette purple-rain --width 1920 --height 1080
-npx mesh-gradient --seed autocad-0.3.0 --out assets/0.3.0.webp
-npx mesh-gradient --list-palettes
+npx fluid-gradient --seed autocad-0.3.0 --out assets/0.3.0.webp
+npx fluid-gradient --list-palettes
 ```
 
 <!-- docs:begin:cli-help -->
 ```text
-Usage: mesh-gradient [options]
+Usage: fluid-gradient [options]
 
 Every flag is optional. With none, writes one WebP with a random seed and a
 palette picked from that seed.

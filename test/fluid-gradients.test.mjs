@@ -1,5 +1,5 @@
 /*
- * mesh-gradients.test — the suite that pins determinism, palette selection and
+ * fluid-gradients.test — the suite that pins determinism, palette selection and
  * CLI/API parity.
  *
  * ## behavior
@@ -217,7 +217,7 @@ test('every render option has a CLI flag', () => {
 });
 
 test('runCli writes a file and honors look flags', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'mesh-cli-'));
+  const dir = mkdtempSync(join(tmpdir(), 'fluid-cli-'));
   const out = join(dir, 'out.png');
   await runCli(['--seed', 'cli', '--palette', 'mint-sea', '--width', '32', '--height', '32', '--grain-opacity', '0', '--out', out]);
   assert.ok(statSync(out).size > 0);
@@ -238,7 +238,7 @@ async function runJson(args) {
 }
 
 test('runCli derives the palette from the seed and honors an explicit one', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'mesh-cli-'));
+  const dir = mkdtempSync(join(tmpdir(), 'fluid-cli-'));
   const args = ['--width', '4', '--height', '4'];
   const a = await runJson([...args, '--seed', 'fixed', '--out', join(dir, 'a.png')]);
   const b = await runJson([...args, '--seed', 'fixed', '--out', join(dir, 'b.png')]);
@@ -251,7 +251,7 @@ test('runCli derives the palette from the seed and honors an explicit one', asyn
 });
 
 test('runCli uses a random seed when none is given', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'mesh-cli-'));
+  const dir = mkdtempSync(join(tmpdir(), 'fluid-cli-'));
   const a = await runJson(['--width', '4', '--height', '4', '--out', join(dir, 'a.png')]);
   const b = await runJson(['--width', '4', '--height', '4', '--out', join(dir, 'b.png')]);
   rmSync(dir, { recursive: true, force: true });

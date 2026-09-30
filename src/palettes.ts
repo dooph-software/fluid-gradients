@@ -26,7 +26,7 @@
  *   copy edit.
  * - Selection stays rendezvous-hashed. An index- or modulo-based pick over the
  *   array is smaller code and re-picks nearly every seed the moment a palette is
- *   added or removed; `test/mesh-gradients.test.mjs` asserts that adding one
+ *   added or removed; `test/fluid-gradients.test.mjs` asserts that adding one
  *   moves only the seeds that land on the new palette. The `::palette::`
  *   separator and the run through `createSeededRandom` are part of the key —
  *   hashing `seed + name` directly mixes shared prefixes poorly and is a

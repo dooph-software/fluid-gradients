@@ -2,7 +2,7 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig([
   {
-    // `palettes` is its own entry so `@dooph-software/mesh-gradients/palettes`
+    // `palettes` is its own entry so `@dooph-software/fluid-gradients/palettes`
     // stays dependency-free (no canvas/sharp) for browser and edge consumers.
     entry: ['src/index.ts', 'src/palettes.ts'],
     format: ['esm', 'cjs'],

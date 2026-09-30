@@ -1,21 +1,21 @@
 {
-  "name": "@dooph-software/mesh-gradients",
-  "version": "1.1.0",
-  "description": "Deterministic, seeded mesh-gradient images with a curated set of color palettes.",
+  "name": "@dooph-software/fluid-gradients",
+  "version": "1.0.0",
+  "description": "Deterministic, seeded fluid-gradient images with a curated set of color palettes.",
   "type": "module",
   "license": "MIT",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/dooph-software/mesh-gradients.git"
+    "url": "https://github.com/dooph-software/fluid-gradients.git"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "bin": {
-    "mesh-gradient": "./dist/cli.js",
-    "mesh-gradients-init-skills": "./bin/init-skills.mjs"
+    "fluid-gradient": "./dist/cli.js",
+    "fluid-gradients-init-skills": "./bin/init-skills.mjs"
   },
   "exports": {
     ".": {

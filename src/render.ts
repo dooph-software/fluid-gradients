@@ -15,7 +15,7 @@
  *   calls, then one grain value per pixel. Inserting a draw, removing one, or
  *   reordering them shifts every pixel of every image — the grain loop is not
  *   incidental noise that can be swapped for `Math.random`; it consumes the
- *   tail of the same stream. `test/mesh-gradients.test.mjs` compares seed `aspect` /
+ *   tail of the same stream. `test/fluid-gradients.test.mjs` compares seed `aspect` /
  *   `jewel-peacock` byte-for-byte against artwork already shipped in Aspect.
  * - `defaultLook` and the bare constants in the pixel loop — the `5.2` / `1.3`
  *   warp offsets, `amplitude` starting at 0.5 and halving, `frequency`
