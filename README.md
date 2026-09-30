@@ -1,5 +1,9 @@
 # @dooph-software/fluid-gradients
 
+<p align="center">
+  <img src="./fluid-gradients-cover-art.png" width="400" alt="fluid-gradients-cover-art">
+</p>
+
 Deterministic, seeded fluid-gradient images plus a curated set of <!-- docs:begin:palette-count -->71<!-- docs:end:palette-count --> color palettes. The same seed, palette, size and look always render the same image.
 
 ```bash
@@ -124,13 +128,15 @@ Use `renderMeshGradient(options)` to get the raw `@napi-rs/canvas` canvas if you
 `look` overrides the rendering knobs. The defaults are exported as `defaultLook`:
 
 <!-- docs:begin:look-knobs -->
-| Knob | Default | Effect |
-| --- | --- | --- |
-| `baseNoiseFrequency` | `0.3` | Lower values give broader, softer color regions. |
-| `domainWarpStrength` | `1` | How much the color field swirls. |
-| `fractalOctaveCount` | `2` | More octaves add finer detail. |
-| `colorTransitionContrast` | `1.75` | Sharpness of the edges between colors. |
-| `grainOpacity` | `0.09` | Strength of the film-grain overlay. |
+
+| Knob                      | Default | Effect                                           |
+| ------------------------- | ------- | ------------------------------------------------ |
+| `baseNoiseFrequency`      | `0.3`   | Lower values give broader, softer color regions. |
+| `domainWarpStrength`      | `1`     | How much the color field swirls.                 |
+| `fractalOctaveCount`      | `2`     | More octaves add finer detail.                   |
+| `colorTransitionContrast` | `1.75`  | Sharpness of the edges between colors.           |
+| `grainOpacity`            | `0.09`  | Strength of the film-grain overlay.              |
+
 <!-- docs:end:look-knobs -->
 
 ## CLI
@@ -146,6 +152,7 @@ npx fluid-gradient --list-palettes
 ```
 
 <!-- docs:begin:cli-help -->
+
 ```text
 Usage: fluid-gradient [options]
 
@@ -170,6 +177,7 @@ Output & info:
   --list-palettes                  Print built-in palette names and exit.
   --help                           Show this help (-h).
 ```
+
 <!-- docs:end:cli-help -->
 
 Flags are defined once in [src/flags.ts](src/flags.ts) and the CLI builds its parser, help text and options from that table. The table is typed as "one entry per render option", so adding an option to the API fails the typecheck until it has a flag — the CLI and the TS API can't drift. `--out`, `--json`, `--list-palettes` and `--help` are CLI-only, since they're file output and terminal display.
