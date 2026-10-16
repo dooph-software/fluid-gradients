@@ -5,6 +5,10 @@
  * - `renderCanvas` seeds one stream from the seed, builds three simplex noise
  *   fields from it, domain-warps the third by the first two, and maps the result
  *   along the palette ramp; the film grain then draws from the same stream.
+ * - `look.whispiness` (0–1, default 0) adds the petal layer from `./petals` on
+ *   top of that fluid color, per pixel, before grain. At 0 nothing in the
+ *   pipeline changes. Above 0 the fluid calms toward the palette's lightest stop
+ *   and translucent petals appear, arranged deterministically from the seed.
  * - `generateImage` wraps that and encodes: PNG straight off the canvas, WebP
  *   through sharp at `DEFAULT_WEBP_QUALITY`.
  * - `lookDescriptions` is the one copy of the per-knob prose; `src/flags.ts`
@@ -17,6 +21,12 @@
  *   incidental noise that can be swapped for `Math.random`; it consumes the
  *   tail of the same stream. `test/fluid-gradients.test.mjs` compares seed `aspect` /
  *   `jewel-peacock` byte-for-byte against artwork already shipped in Aspect.
+ * - Whispiness must not disturb the default path. `renderCanvas` creates the
+ *   petal layer only when `look.whispiness > 0`, and the layer draws from its
+ *   own `<seed>::whisp` stream, never from `random`. Drawing from `random` for
+ *   petals would shift the grain (and so every pixel) of all images, and the
+ *   Aspect fixture exists to catch exactly that. Keep `whispiness: 0` identical
+ *   to omitting it, down to the bytes.
  * - `defaultLook` and the bare constants in the pixel loop — the `5.2` / `1.3`
  *   warp offsets, `amplitude` starting at 0.5 and halving, `frequency`
  *   doubling, the `smoothStep` around the contrast term — are the prototype's
@@ -35,6 +45,7 @@
 import { createCanvas, ImageData, type Canvas, type SKRSContext2D } from '@napi-rs/canvas';
 import sharp from 'sharp';
 import { createNoise2D } from 'simplex-noise';
+import { createPetalLayer } from './petals';
 import { paletteAccent, paletteComplement, type Palette, type PaletteName } from './palettes';
 import { createSeededRandom, hashStringToInt } from './random';
 
@@ -53,6 +64,8 @@ export type GradientLook = {
   colorTransitionContrast: number;
   /** Opacity of the film-grain overlay, 0–1. */
   grainOpacity: number;
+  /** Strength of the soft petal layer over the fluid, 0–1. 0 leaves the fluid untouched. */
+  whispiness: number;
 };
 
 /** One-line description per knob. Shared by the CLI help and the generated README table. */
@@ -62,6 +75,7 @@ export const lookDescriptions: Readonly<Record<keyof GradientLook, string>> = {
   fractalOctaveCount: 'More octaves add finer detail.',
   colorTransitionContrast: 'Sharpness of the edges between colors.',
   grainOpacity: 'Strength of the film-grain overlay.',
+  whispiness: 'Fades in soft, overlapping petals over the fluid, from 0 (none) to 1.',
 };
 
 export const defaultLook: Readonly<GradientLook> = {
@@ -70,6 +84,7 @@ export const defaultLook: Readonly<GradientLook> = {
   fractalOctaveCount: 2,
   colorTransitionContrast: 1.75,
   grainOpacity: 0.09,
+  whispiness: 0,
 };
 
 export type MeshGradientOptions<Name extends string = PaletteName> = {
@@ -155,6 +170,10 @@ export async function renderCanvas(
   const { seed, palette, width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT } = options;
   const look = { ...defaultLook, ...options.look };
 
+  if (!(look.whispiness >= 0 && look.whispiness <= 1)) {
+    throw new RangeError(`look.whispiness must be between 0 and 1. Got: ${look.whispiness}`);
+  }
+
   const random = createSeededRandom(hashStringToInt(seed));
   const rgbStops = palette.colors.map(hexToRgb);
 
@@ -183,6 +202,7 @@ export async function renderCanvas(
   const image = context.createImageData(width, height);
   const pixels = image.data;
   const aspectRatio = width / height;
+  const petalLayer = look.whispiness > 0 ? createPetalLayer(seed, rgbStops, aspectRatio) : null;
 
   for (let pixelY = 0; pixelY < height; pixelY++) {
     for (let pixelX = 0; pixelX < width; pixelX++) {
@@ -203,7 +223,9 @@ export async function renderCanvas(
         Math.max(0, Math.min(1, (normalizedValue - 0.5) * look.colorTransitionContrast + 0.5)),
       );
 
-      const [red, green, blue] = sampleColorRamp(rgbStops, contrastedValue);
+      const color = sampleColorRamp(rgbStops, contrastedValue);
+      petalLayer?.shade(pixelX / height, pixelY / height, color, look.whispiness);
+      const [red, green, blue] = color;
       const pixelIndex = (pixelY * width + pixelX) * 4;
       pixels[pixelIndex] = red;
       pixels[pixelIndex + 1] = green;

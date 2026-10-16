@@ -197,6 +197,35 @@ test('png output honors custom size', async () => {
   assert.equal(result.width, 64);
 });
 
+test('whispiness 0 is byte-identical to omitting it, including the Aspect fixture', async () => {
+  const fixture = readFileSync(new URL('./fixtures/jewel-peacock-aspect.webp', import.meta.url));
+  const explicit = await generateMeshGradient({
+    seed: 'aspect',
+    palette: 'jewel-peacock',
+    look: { whispiness: 0 },
+  });
+  assert.ok(explicit.buffer.equals(fixture), 'whispiness: 0 changed the default render');
+});
+
+test('whispiness is deterministic per seed, changes the image, and rejects out-of-range values', async () => {
+  const base = { palette: 'tulip-blur', format: 'png', width: 96, height: 120 };
+  const plain = await generateMeshGradient({ ...base, seed: 'w' });
+  const a = await generateMeshGradient({ ...base, seed: 'w', look: { whispiness: 0.8 } });
+  const b = await generateMeshGradient({ ...base, seed: 'w', look: { whispiness: 0.8 } });
+  const other = await generateMeshGradient({ ...base, seed: 'w2', look: { whispiness: 0.8 } });
+  const half = await generateMeshGradient({ ...base, seed: 'w', look: { whispiness: 0.4 } });
+  assert.ok(a.buffer.equals(b.buffer), 'same seed + whispiness must render the same bytes');
+  assert.ok(!a.buffer.equals(plain.buffer), 'whispiness should change the image');
+  assert.ok(!a.buffer.equals(half.buffer), 'whispiness amounts should differ');
+  assert.ok(!a.buffer.equals(other.buffer), 'a different seed should lay out different petals');
+  for (const bad of [-0.1, 1.1, Number.NaN]) {
+    await assert.rejects(
+      generateMeshGradient({ ...base, seed: 'w', look: { whispiness: bad } }),
+      /whispiness must be between 0 and 1/,
+    );
+  }
+});
+
 // ── CLI ────────────────────────────────────────────────────────────────────
 // The CLI holds no flag list of its own: parser, help and options all come from
 // the flag tables, so these checks are what keeps it level with the TS API.
@@ -284,8 +313,26 @@ test('runCli rejects conflicting palette-source flags', async () => {
   await assert.rejects(runCli(['--random-palette', '--chaos']), /cannot be combined/);
 });
 
+test('runCli --whispiness composes with the palette flags and stays deterministic', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'fluid-cli-'));
+  const args = ['--width', '24', '--height', '30', '--seed', 'fixed', '--whispiness', '0.7'];
+  const run = (extra, name) => runJson([...args, ...extra, '--out', join(dir, name)]);
+  const a = await run(['--palette', 'silk-rose'], 'a.png');
+  const b = await run(['--palette', 'silk-rose'], 'b.png');
+  assert.equal(a.palette, 'silk-rose');
+  assert.equal(a.bytes, b.bytes);
+  assert.equal((await run(['--chaos'], 'c.png')).palette, 'chaos');
+  assert.ok((await run(['--random-palette'], 'd.png')).palette);
+  const plain = await runJson(['--width', '24', '--height', '30', '--seed', 'fixed', '--palette', 'silk-rose', '--out', join(dir, 'e.png')]);
+  assert.notEqual(a.bytes, plain.bytes);
+  rmSync(dir, { recursive: true, force: true });
+});
+
 test('runCli rejects bad flag values through the flag specs', async () => {
   await assert.rejects(runCli(['--width', '0']), /--width must be a positive integer/);
   await assert.rejects(runCli(['--grain-opacity', 'abc']), /--grain-opacity must be a number/);
   await assert.rejects(runCli(['--out', 'x.gif']), /must end in .webp or .png/);
+  for (const bad of ['1.5', '-1', 'abc', '']) {
+    await assert.rejects(runCli([`--whispiness=${bad}`]), /--whispiness must be a number from 0 to 1/);
+  }
 });

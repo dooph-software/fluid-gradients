@@ -54,6 +54,14 @@ const finiteNumber = (flag: string) => (raw: string) => {
   return value;
 };
 
+const unitInterval = (flag: string) => (raw: string) => {
+  const value = Number(raw);
+  if (raw.trim() === '' || !Number.isFinite(value) || value < 0 || value > 1) {
+    throw new Error(`--${flag} must be a number from 0 to 1. Got: ${raw}`);
+  }
+  return value;
+};
+
 /**
  * Render options the CLI maps one-to-one. `format` is excluded because it comes
  * from the --out extension, and `look` has its own table below.
@@ -126,6 +134,12 @@ export const lookFlags = {
     placeholder: '<0-1>',
     describe: `${lookDescriptions.grainOpacity} Default ${defaultLook.grainOpacity}.`,
     parse: finiteNumber('grain-opacity'),
+  },
+  whispiness: {
+    flag: 'whispiness',
+    placeholder: '<0-1>',
+    describe: `${lookDescriptions.whispiness} Default ${defaultLook.whispiness}.`,
+    parse: unitInterval('whispiness'),
   },
 } satisfies { [K in keyof GradientLook]: FlagSpec<number> };
 

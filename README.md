@@ -127,6 +127,8 @@ Use `renderMeshGradient(options)` to get the raw `@napi-rs/canvas` canvas if you
 
 `look` overrides the rendering knobs. The defaults are exported as `defaultLook`:
 
+`whispiness` is the one knob that adds something instead of tuning the fluid: above 0, soft overlapping petals are composited over the gradient, in any palette (the palette's lightest stop becomes the pale ground, the rest become petal colors). At `0`, the default, nothing changes, byte for byte. The petal layout comes from the seed alone, so raising the value fades the same petals in. Unlike the fluid layer, the petals' placement depends on the aspect ratio, so changing it re-lays-out the petals.
+
 <!-- docs:begin:look-knobs -->
 | Knob | Default | Effect |
 | --- | --- | --- |
@@ -135,6 +137,7 @@ Use `renderMeshGradient(options)` to get the raw `@napi-rs/canvas` canvas if you
 | `fractalOctaveCount` | `2` | More octaves add finer detail. |
 | `colorTransitionContrast` | `1.75` | Sharpness of the edges between colors. |
 | `grainOpacity` | `0.09` | Strength of the film-grain overlay. |
+| `whispiness` | `0` | Fades in soft, overlapping petals over the fluid, from 0 (none) to 1. |
 <!-- docs:end:look-knobs -->
 
 ## CLI
@@ -167,6 +170,7 @@ Options:
   --fractal-octave-count <n>       More octaves add finer detail. Default 2.
   --color-transition-contrast <n>  Sharpness of the edges between colors. Default 1.75.
   --grain-opacity <0-1>            Strength of the film-grain overlay. Default 0.09.
+  --whispiness <0-1>               Fades in soft, overlapping petals over the fluid, from 0 (none) to 1. Default 0.
 
 Output & info:
   --out <path>                     Output file, .webp or .png. Default: output/<palette>-<seed>.webp

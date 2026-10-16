@@ -14,6 +14,7 @@ An image is a pure function of **seed + palette + aspect ratio + look**. Store t
 | `seed` | Drives the composition. |
 | `palette.name` (from the result) | Omitting `palette` picks one from the seed, but that pick shifts for ~1/N seeds whenever a package upgrade adds palettes. Store the resolved name and pass it back. |
 | `width` × `height` | The field is scaled to the image's height and anchored at its left edge. Same aspect ratio → same composition at any resolution. Wider or narrower → the right side extends or trims, so a square render is exactly the left square of a wide one (only the grain differs — it's seeded but drawn per pixel, so it depends on size). Taller or shorter relative to width → rescaled, a different-looking image. |
+| `look.whispiness` | Default `0` (the plain fluid, unchanged). Above 0 it adds seed-derived soft petals over the gradient; store the value with the seed. The petals' layout depends on the aspect ratio, so the "left square of a wide render" property above does not hold for whispiness above 0. |
 | `accent`, `complement` (optional) | Mid-tone hex, and a vivid opposite-hue color built to stand out on the image, for chips and geometry. Both are derivable later from the palette name. |
 
 If "must never change" is a hard requirement, also store the rendered bytes. The renderer is frozen by design, but an encoder (sharp/libwebp) upgrade can still shift WebP bytes; stored bytes can't drift at all.
