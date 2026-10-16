@@ -145,6 +145,30 @@ export const colorPalettes = [
   { name: 'onyx-snow', colors: ['#ffffff', '#b0b0b0', '#4a4a4a', '#000000'] },
   { name: 'midnight-ember', colors: ['#f0a468', '#c23f1f', '#2a1410', '#0a0a0c'] },
   { name: 'slate-harbor', colors: ['#aeb7bd', '#6f7b84', '#3c454c', '#1a1f24'] },
+  { name: 'ember-mono', colors: ['#ff9a6b', '#cf5604', '#632400', '#180501'] },
+
+  // ── Monochromatic: one hue, lightness stepping down (OKLCH-spaced) ──
+  { name: 'tangerine-mono', colors: ['#ffeee4', '#feb079', '#dc7100', '#824103'] },
+  { name: 'electric-blue-mono', colors: ['#ebf2fe', '#a4c6fc', '#5d91e7', '#2a5397'] },
+  { name: 'magenta-mono', colors: ['#feecf5', '#edaed1', '#cd6ca6', '#823564'] },
+  { name: 'emerald-mono', colors: ['#e2f8ea', '#95d5af', '#2cab70', '#03663e'] },
+  { name: 'violet-mono', colors: ['#f2f0fe', '#c8b7ff', '#9e71fd', '#5f38a7'] },
+  { name: 'crimson-mono', colors: ['#ffedec', '#feaaa9', '#f44f5d', '#9e122b'] },
+  { name: 'aqua-mono', colors: ['#dff7f8', '#8dd2d6', '#39a4a9', '#026266'] },
+
+  { name: 'burgundy-mono', colors: ['#fbe0e4', '#dc9ea8', '#a7415a', '#560c24'] },
+  { name: 'indigo-mono', colors: ['#eaeefe', '#a7b2f7', '#5a5ce2', '#261b81'] },
+  { name: 'lime-mono', colors: ['#edfcd7', '#c2e87d', '#9fc93e', '#638119'] },
+
+  // ── Monochromatic earth tones: same idea, chroma held up so they stay
+  // clay / ochre / moss rather than collapsing to greige ──
+  { name: 'terracotta-mono', colors: ['#fdeae4', '#f6b19b', '#c5694c', '#73311b'] },
+  { name: 'ochre-mono', colors: ['#f9edd5', '#dec082', '#a87f09', '#5b4404'] },
+  { name: 'olive-mono', colors: ['#edf2d7', '#c2cb91', '#848e38', '#474d04'] },
+  { name: 'fern-mono', colors: ['#e3f5df', '#a9d1a0', '#5f9752', '#2a5320'] },
+  { name: 'verdigris-mono', colors: ['#d6f7f1', '#96d2c9', '#38988d', '#07534c'] },
+  { name: 'umber-mono', colors: ['#feeada', '#e1bc9d', '#ab7a4f', '#623f1e'] },
+  { name: 'adobe-mono', colors: ['#fee9e8', '#eeb3b0', '#bb6d6b', '#6c3434'] },
 
   // ── Neutral / mono ──
   { name: 'ivory-ink', colors: ['#f7f4ef', '#d8d2c8', '#8a8378', '#20201d'] },
@@ -153,6 +177,16 @@ export const colorPalettes = [
   { name: 'porcelain-greige', colors: ['#f6f3ef', '#ddd4c9', '#b0a596', '#6a5f52'] },
   { name: 'battleship-steel', colors: ['#e6e9e8', '#b9c0be', '#7d8683', '#3f4745'] },
   { name: 'gunmetal-fog', colors: ['#eceef1', '#c2c7cd', '#7b838d', '#343a42'] },
+  { name: 'silver-steel', colors: ['#e2e5e8', '#c4c9cf', '#9aa2ac', '#646f7d'] },
+  // ── Airy: a near-white base with soft color splashes, in the style of
+  // blurred editorial gradients (light stops first, then the splash hues) ──
+  { name: 'petal-bloom', colors: ['#e4eeff', '#bcd2ff', '#dfa6e9', '#fa787b', '#fba96a'] },
+  { name: 'tulip-blur', colors: ['#e6f1f6', '#a8d4e8', '#f1c4d0', '#ee9a6e', '#f4b81c'] },
+  { name: 'silk-rose', colors: ['#fcedf4', '#f2cfdd', '#f0c1b8', '#d68ba5', '#b07a9f'] },
+
+  // ── Flags: sampled from heraldic flag art ──
+  { name: 'sultans-eagle', colors: ['#f2da38', '#e3c42a', '#c9a21d', '#a1353a', '#6a1c26'] },
+  { name: 'zhuge-nu', colors: ['#f0f3ee', '#dfc652', '#4fa79b', '#1f8283', '#0f5252'] },
 ] as const satisfies readonly Palette[];
 
 /** Union of every built-in palette name, e.g. `"mint-sea"`. */

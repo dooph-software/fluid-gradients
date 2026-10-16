@@ -102,13 +102,49 @@ One sample per built-in palette, 600×750 WebP. Each one uses its own palette na
   </tr>
   <tr>
     <td align="center"><img src="./slate-harbor.webp" width="180" alt="slate-harbor"><br><code>slate-harbor</code><br><sub>#aeb7bd #6f7b84 #3c454c #1a1f24</sub><br><sub>accent #3c454c · complement #fe9200</sub><br><sub>seed <code>slate-harbor</code></sub></td>
-    <td align="center"><img src="./ivory-ink.webp" width="180" alt="ivory-ink"><br><code>ivory-ink</code><br><sub>#f7f4ef #d8d2c8 #8a8378 #20201d</sub><br><sub>accent #8a8378 · complement #265dda</sub><br><sub>seed <code>ivory-ink</code></sub></td>
-    <td align="center"><img src="./paper-graphite.webp" width="180" alt="paper-graphite"><br><code>paper-graphite</code><br><sub>#f4f4f5 #cfcfd4 #83838f #1c1c22</sub><br><sub>accent #83838f · complement #cdc300</sub><br><sub>seed <code>paper-graphite</code></sub></td>
-    <td align="center"><img src="./bone-coffee.webp" width="180" alt="bone-coffee"><br><code>bone-coffee</code><br><sub>#f5efe6 #d9c9b3 #9c8468 #3a2c1e</sub><br><sub>accent #9c8468 · complement #0091fd</sub><br><sub>seed <code>bone-coffee</code></sub></td>
+    <td align="center"><img src="./ember-mono.webp" width="180" alt="ember-mono"><br><code>ember-mono</code><br><sub>#ff9a6b #cf5604 #632400 #180501</sub><br><sub>accent #632400 · complement #00cafd</sub><br><sub>seed <code>ember-mono</code></sub></td>
+    <td align="center"><img src="./tangerine-mono.webp" width="180" alt="tangerine-mono"><br><code>tangerine-mono</code><br><sub>#ffeee4 #feb079 #dc7100 #824103</sub><br><sub>accent #dc7100 · complement #00b9fe</sub><br><sub>seed <code>tangerine-mono</code></sub></td>
+    <td align="center"><img src="./electric-blue-mono.webp" width="180" alt="electric-blue-mono"><br><code>electric-blue-mono</code><br><sub>#ebf2fe #a4c6fc #5d91e7 #2a5397</sub><br><sub>accent #5d91e7 · complement #f5af00</sub><br><sub>seed <code>electric-blue-mono</code></sub></td>
   </tr>
   <tr>
+    <td align="center"><img src="./magenta-mono.webp" width="180" alt="magenta-mono"><br><code>magenta-mono</code><br><sub>#feecf5 #edaed1 #cd6ca6 #823564</sub><br><sub>accent #cd6ca6 · complement #00dfa2</sub><br><sub>seed <code>magenta-mono</code></sub></td>
+    <td align="center"><img src="./emerald-mono.webp" width="180" alt="emerald-mono"><br><code>emerald-mono</code><br><sub>#e2f8ea #95d5af #2cab70 #03663e</sub><br><sub>accent #2cab70 · complement #e25dc2</sub><br><sub>seed <code>emerald-mono</code></sub></td>
+    <td align="center"><img src="./violet-mono.webp" width="180" alt="violet-mono"><br><code>violet-mono</code><br><sub>#f2f0fe #c8b7ff #9e71fd #5f38a7</sub><br><sub>accent #9e71fd · complement #bbca00</sub><br><sub>seed <code>violet-mono</code></sub></td>
+    <td align="center"><img src="./crimson-mono.webp" width="180" alt="crimson-mono"><br><code>crimson-mono</code><br><sub>#ffedec #feaaa9 #f44f5d #9e122b</sub><br><sub>accent #f44f5d · complement #00d7e0</sub><br><sub>seed <code>crimson-mono</code></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./aqua-mono.webp" width="180" alt="aqua-mono"><br><code>aqua-mono</code><br><sub>#dff7f8 #8dd2d6 #39a4a9 #026266</sub><br><sub>accent #39a4a9 · complement #e94555</sub><br><sub>seed <code>aqua-mono</code></sub></td>
+    <td align="center"><img src="./burgundy-mono.webp" width="180" alt="burgundy-mono"><br><code>burgundy-mono</code><br><sub>#fbe0e4 #dc9ea8 #a7415a #560c24</sub><br><sub>accent #a7415a · complement #00dace</sub><br><sub>seed <code>burgundy-mono</code></sub></td>
+    <td align="center"><img src="./indigo-mono.webp" width="180" alt="indigo-mono"><br><code>indigo-mono</code><br><sub>#eaeefe #a7b2f7 #5a5ce2 #261b81</sub><br><sub>accent #5a5ce2 · complement #dcbd00</sub><br><sub>seed <code>indigo-mono</code></sub></td>
+    <td align="center"><img src="./lime-mono.webp" width="180" alt="lime-mono"><br><code>lime-mono</code><br><sub>#edfcd7 #c2e87d #9fc93e #638119</sub><br><sub>accent #9fc93e · complement #934dd3</sub><br><sub>seed <code>lime-mono</code></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./terracotta-mono.webp" width="180" alt="terracotta-mono"><br><code>terracotta-mono</code><br><sub>#fdeae4 #f6b19b #c5694c #73311b</sub><br><sub>accent #c5694c · complement #00d3fb</sub><br><sub>seed <code>terracotta-mono</code></sub></td>
+    <td align="center"><img src="./ochre-mono.webp" width="180" alt="ochre-mono"><br><code>ochre-mono</code><br><sub>#f9edd5 #dec082 #a87f09 #5b4404</sub><br><sub>accent #a87f09 · complement #2a55d3</sub><br><sub>seed <code>ochre-mono</code></sub></td>
+    <td align="center"><img src="./olive-mono.webp" width="180" alt="olive-mono"><br><code>olive-mono</code><br><sub>#edf2d7 #c2cb91 #848e38 #474d04</sub><br><sub>accent #848e38 · complement #7847d0</sub><br><sub>seed <code>olive-mono</code></sub></td>
+    <td align="center"><img src="./fern-mono.webp" width="180" alt="fern-mono"><br><code>fern-mono</code><br><sub>#e3f5df #a9d1a0 #5f9752 #2a5320</sub><br><sub>accent #5f9752 · complement #bf5ad6</sub><br><sub>seed <code>fern-mono</code></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./verdigris-mono.webp" width="180" alt="verdigris-mono"><br><code>verdigris-mono</code><br><sub>#d6f7f1 #96d2c9 #38988d #07534c</sub><br><sub>accent #38988d · complement #e8477d</sub><br><sub>seed <code>verdigris-mono</code></sub></td>
+    <td align="center"><img src="./umber-mono.webp" width="180" alt="umber-mono"><br><code>umber-mono</code><br><sub>#feeada #e1bc9d #ab7a4f #623f1e</sub><br><sub>accent #ab7a4f · complement #01abff</sub><br><sub>seed <code>umber-mono</code></sub></td>
+    <td align="center"><img src="./adobe-mono.webp" width="180" alt="adobe-mono"><br><code>adobe-mono</code><br><sub>#fee9e8 #eeb3b0 #bb6d6b #6c3434</sub><br><sub>accent #bb6d6b · complement #00d7e3</sub><br><sub>seed <code>adobe-mono</code></sub></td>
+    <td align="center"><img src="./ivory-ink.webp" width="180" alt="ivory-ink"><br><code>ivory-ink</code><br><sub>#f7f4ef #d8d2c8 #8a8378 #20201d</sub><br><sub>accent #8a8378 · complement #265dda</sub><br><sub>seed <code>ivory-ink</code></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./paper-graphite.webp" width="180" alt="paper-graphite"><br><code>paper-graphite</code><br><sub>#f4f4f5 #cfcfd4 #83838f #1c1c22</sub><br><sub>accent #83838f · complement #cdc300</sub><br><sub>seed <code>paper-graphite</code></sub></td>
+    <td align="center"><img src="./bone-coffee.webp" width="180" alt="bone-coffee"><br><code>bone-coffee</code><br><sub>#f5efe6 #d9c9b3 #9c8468 #3a2c1e</sub><br><sub>accent #9c8468 · complement #0091fd</sub><br><sub>seed <code>bone-coffee</code></sub></td>
     <td align="center"><img src="./porcelain-greige.webp" width="180" alt="porcelain-greige"><br><code>porcelain-greige</code><br><sub>#f6f3ef #ddd4c9 #b0a596 #6a5f52</sub><br><sub>accent #b0a596 · complement #0088fd</sub><br><sub>seed <code>porcelain-greige</code></sub></td>
     <td align="center"><img src="./battleship-steel.webp" width="180" alt="battleship-steel"><br><code>battleship-steel</code><br><sub>#e6e9e8 #b9c0be #7d8683 #3f4745</sub><br><sub>accent #7d8683 · complement #e74c92</sub><br><sub>seed <code>battleship-steel</code></sub></td>
+  </tr>
+  <tr>
     <td align="center"><img src="./gunmetal-fog.webp" width="180" alt="gunmetal-fog"><br><code>gunmetal-fog</code><br><sub>#eceef1 #c2c7cd #7b838d #343a42</sub><br><sub>accent #7b838d · complement #fcab00</sub><br><sub>seed <code>gunmetal-fog</code></sub></td>
+    <td align="center"><img src="./silver-steel.webp" width="180" alt="silver-steel"><br><code>silver-steel</code><br><sub>#e2e5e8 #c4c9cf #9aa2ac #646f7d</sub><br><sub>accent #9aa2ac · complement #feaa00</sub><br><sub>seed <code>silver-steel</code></sub></td>
+    <td align="center"><img src="./petal-bloom.webp" width="180" alt="petal-bloom"><br><code>petal-bloom</code><br><sub>#e4eeff #bcd2ff #dfa6e9 #fa787b #fba96a</sub><br><sub>accent #dfa6e9 · complement #69dc5a</sub><br><sub>seed <code>petal-bloom</code></sub></td>
+    <td align="center"><img src="./tulip-blur.webp" width="180" alt="tulip-blur"><br><code>tulip-blur</code><br><sub>#e6f1f6 #a8d4e8 #f1c4d0 #ee9a6e #f4b81c</sub><br><sub>accent #f1c4d0 · complement #00dbc2</sub><br><sub>seed <code>tulip-blur</code></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="./silk-rose.webp" width="180" alt="silk-rose"><br><code>silk-rose</code><br><sub>#fcedf4 #f2cfdd #f0c1b8 #d68ba5 #b07a9f</sub><br><sub>accent #f0c1b8 · complement #00d5f0</sub><br><sub>seed <code>silk-rose</code></sub></td>
+    <td align="center"><img src="./sultans-eagle.webp" width="180" alt="sultans-eagle"><br><code>sultans-eagle</code><br><sub>#f2da38 #e3c42a #c9a21d #a1353a #6a1c26</sub><br><sub>accent #c9a21d · complement #3c51d3</sub><br><sub>seed <code>sultans-eagle</code></sub></td>
+    <td align="center"><img src="./zhuge-nu.webp" width="180" alt="zhuge-nu"><br><code>zhuge-nu</code><br><sub>#f0f3ee #dfc652 #4fa79b #1f8283 #0f5252</sub><br><sub>accent #4fa79b · complement #e8477f</sub><br><sub>seed <code>zhuge-nu</code></sub></td>
   </tr>
 </table>

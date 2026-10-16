@@ -259,6 +259,31 @@ test('runCli uses a random seed when none is given', async () => {
   assert.equal(a.palette, pickPalette(a.seed).name);
 });
 
+test('runCli --random-palette ignores the seed-derived pick; --chaos is seed-deterministic', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'fluid-cli-'));
+  const args = ['--width', '4', '--height', '4', '--seed', 'fixed'];
+  const names = new Set();
+  for (let i = 0; i < 12; i++) {
+    const r = await runJson([...args, '--random-palette', '--out', join(dir, `r${i}.png`)]);
+    assert.equal(r.seed, 'fixed');
+    names.add(r.palette);
+  }
+  assert.ok(names.size > 1, 'random palettes should vary for one seed');
+
+  const a = await runJson([...args, '--chaos', '--out', join(dir, 'a.png')]);
+  const b = await runJson([...args, '--chaos', '--out', join(dir, 'b.png')]);
+  assert.equal(a.palette, 'chaos');
+  assert.equal(a.accent, b.accent);
+  assert.equal(a.complement, b.complement);
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test('runCli rejects conflicting palette-source flags', async () => {
+  await assert.rejects(runCli(['--palette', 'mint-sea', '--chaos']), /cannot be combined/);
+  await assert.rejects(runCli(['--palette', 'mint-sea', '--random-palette']), /cannot be combined/);
+  await assert.rejects(runCli(['--random-palette', '--chaos']), /cannot be combined/);
+});
+
 test('runCli rejects bad flag values through the flag specs', async () => {
   await assert.rejects(runCli(['--width', '0']), /--width must be a positive integer/);
   await assert.rejects(runCli(['--grain-opacity', 'abc']), /--grain-opacity must be a number/);

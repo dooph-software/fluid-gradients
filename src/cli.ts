@@ -7,6 +7,11 @@
  * - With no `--seed`, a random one is generated and the palette is derived from
  *   it exactly as the API would. Both are printed so any result can be
  *   reproduced.
+ * - `--random-palette` picks a built-in palette at random even when `--seed` is
+ *   given, so a fixed composition can be tried in many palettes; the picked name
+ *   is printed. `--chaos` replaces the palette with 3–5 random hex colors drawn
+ *   from the seed (`<seed>::chaos`), so the same seed gives the same colors.
+ *   Both conflict with `--palette` and with each other, and throw.
  * - Output format comes from the `--out` extension; anything but `.webp` or
  *   `.png` throws.
  *
@@ -25,13 +30,22 @@
  *   `scripts/sync-docs.mjs` imports `helpText`, so a bare top-level `runCli()`
  *   would have both of them render an image and `process.exit` mid-run.
  */
-import { randomBytes } from 'node:crypto';
+import { randomBytes, randomInt } from 'node:crypto';
 import { mkdirSync, realpathSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, type ParseArgsConfig } from 'node:util';
 import { cliOnlyFlags, lookFlags, optionFlags, type FlagSpec } from './flags';
-import { colorPalettes, findPalette, generateMeshGradient, pickPalette } from './index';
+import {
+  colorPalettes,
+  createSeededRandom,
+  findPalette,
+  generateMeshGradient,
+  hashStringToInt,
+  pickPalette,
+  type Palette,
+  type PaletteColors,
+} from './index';
 import type { GradientLook } from './render';
 
 const allFlags = [...Object.values(optionFlags), ...Object.values(lookFlags)];
@@ -61,8 +75,23 @@ const parseOptions: ParseArgsConfig['options'] = {
   out: { type: 'string' },
   json: { type: 'boolean' },
   'list-palettes': { type: 'boolean' },
+  'random-palette': { type: 'boolean' },
+  chaos: { type: 'boolean' },
   help: { type: 'boolean', short: 'h' },
 };
+
+/** 3–5 uniformly random colors, a pure function of the seed. */
+function chaosPalette(seed: string): Palette {
+  const random = createSeededRandom(hashStringToInt(`${seed}::chaos`));
+  const count = 3 + Math.floor(random() * 3);
+  const colors = Array.from({ length: count }, () => {
+    const channels = [random(), random(), random()].map((c) =>
+      Math.floor(c * 256).toString(16).padStart(2, '0'),
+    );
+    return `#${channels.join('')}` as const;
+  }) as unknown as PaletteColors;
+  return { name: 'chaos', colors };
+}
 
 /** What a flag's own `parse` returns, e.g. `width` → number. */
 type Parsed<K extends keyof typeof optionFlags> = ReturnType<(typeof optionFlags)[K]['parse']>;
@@ -105,7 +134,19 @@ export async function runCli(argv: string[]): Promise<void> {
   // as in the API. Both are printed, so any result can be reproduced.
   const seed = read('seed') ?? randomBytes(4).toString('hex');
   const paletteName = read('palette');
-  const palette = paletteName === undefined ? pickPalette(seed) : findPalette(paletteName);
+  if (paletteName !== undefined && (values['random-palette'] || values.chaos)) {
+    throw new Error('--palette cannot be combined with --random-palette or --chaos.');
+  }
+  if (values['random-palette'] && values.chaos) {
+    throw new Error('--random-palette and --chaos cannot be combined.');
+  }
+  const palette = values.chaos
+    ? chaosPalette(seed)
+    : values['random-palette']
+      ? colorPalettes[randomInt(colorPalettes.length)]
+      : paletteName === undefined
+        ? pickPalette(seed)
+        : findPalette(paletteName);
   const out = raw('out') ?? join('output', `${palette.name}-${seed}.webp`);
 
   const extension = extname(out).toLowerCase();
@@ -134,6 +175,7 @@ export async function runCli(argv: string[]): Promise<void> {
   } else {
     console.log(`✓ ${out} (${(result.buffer.length / 1024).toFixed(2)} KB)`);
     console.log(`  seed: ${result.seed}`);
+    if (values.chaos) console.log(`  colors: ${result.palette.colors.join(' ')}`);
     console.log(`  palette: ${result.palette.name} (accent: ${result.accent}, complement: ${result.complement})`);
   }
 }

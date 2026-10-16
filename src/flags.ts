@@ -4,8 +4,10 @@
  * ## behavior
  * - `optionFlags` and `lookFlags` each map one render option to one long flag,
  *   with the parser/validator for that flag's value living beside it.
- * - `cliOnlyFlags` holds the flags with no API counterpart: file output and
- *   terminal presentation.
+ * - `cliOnlyFlags` holds the flags with no API counterpart: file output,
+ *   terminal presentation, and the palette-source switches (`--random-palette`,
+ *   `--chaos`), which the CLI resolves into an ordinary `palette` before calling
+ *   the API.
  * - `src/cli.ts` builds its `parseArgs` config, its help text and its options
  *   object from these tables. `format` is absent on purpose — it comes from the
  *   `--out` extension.
@@ -133,6 +135,16 @@ export const cliOnlyFlags = [
     flag: 'out',
     placeholder: '<path>',
     describe: 'Output file, .webp or .png. Default: output/<palette>-<seed>.webp',
+  },
+  {
+    flag: 'random-palette',
+    placeholder: '',
+    describe: 'Pick the palette at random instead of deriving it from --seed. The name is printed.',
+  },
+  {
+    flag: 'chaos',
+    placeholder: '',
+    describe: 'Ignore the palettes: use 3–5 random colors (the same --seed gives the same colors).',
   },
   { flag: 'json', placeholder: '', describe: 'Print result metadata as JSON.' },
   { flag: 'list-palettes', placeholder: '', describe: 'Print built-in palette names and exit.' },

@@ -39,7 +39,7 @@ const contrastChip = paletteComplement(palette); // opposite hue, vivid — stan
 ## Quick reference
 
 - **Custom palettes or a project-wide default size:** `createMeshGradients({ palettes, width, height })` in one module, exported and reused.
-- **Browse palettes:** `npx fluid-gradient --list-palettes`; one-off images: `npx fluid-gradient --seed x --palette y`.
+- **Browse palettes:** `npx fluid-gradient --list-palettes`; one-off images: `npx fluid-gradient --seed x --palette y`. `--random-palette` keeps `--seed` but picks the palette at random; `--chaos` uses random colors (deterministic per seed).
 - **Draw on top before encoding:** `renderMeshGradient` returns the canvas.
 
 ## Common mistakes
