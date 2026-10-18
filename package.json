@@ -1,6 +1,6 @@
 {
   "name": "@dooph-software/fluid-gradients",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "description": "Deterministic, seeded fluid-gradient images with a curated set of color palettes.",
   "type": "module",
   "license": "MIT",
