@@ -45,7 +45,7 @@
   "scripts": {
     "build": "tsup",
     "build:watch": "tsup --watch",
-    "gradient": "npm run build && node dist/cli.js",
+    "gradient": "node --import tsx src/cli.ts",
     "lint": "tsc --noEmit",
     "test": "npm run build && node scripts/sync-docs.mjs --check && node scripts/check-readme-types.mjs && node --test test/*.test.mjs",
     "examples": "npm run build && node scripts/generate-examples.mjs",
@@ -65,6 +65,7 @@
   "devDependencies": {
     "@types/node": "^22.19.0",
     "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
     "typescript": "~5.9.3"
   }
 }

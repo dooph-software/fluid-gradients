@@ -156,7 +156,7 @@ const { buffer } = await generateMeshGradient({
 Every flag is optional. With none, it writes one WebP to `output/` with a random seed and the palette that seed picks. Both are printed with the result, so passing them back reproduces the image exactly.
 
 ```bash
-npm run gradient                       # in this repo (builds first, then runs the CLI)
+npm run gradient                       # in this repo (runs src/ directly, no build)
 npx fluid-gradient                      # anywhere the package is installed
 npm run gradient -- --seed hero --palette purple-rain --width 1920 --height 1080
 npx fluid-gradient --seed autocad-0.3.0 --out assets/0.3.0.webp
