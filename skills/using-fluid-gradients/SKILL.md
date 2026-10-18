@@ -14,7 +14,7 @@ An image is a pure function of **seed + palette + aspect ratio + look**. Store t
 | `seed` | Drives the composition. |
 | `palette.name` (from the result) | Omitting `palette` picks one from the seed, but that pick shifts for ~1/N seeds whenever a package upgrade adds palettes. Store the resolved name and pass it back. |
 | `width` × `height` | The field is scaled to the image's height and anchored at its left edge. Same aspect ratio → same composition at any resolution. Wider or narrower → the right side extends or trims, so a square render is exactly the left square of a wide one (only the grain differs — it's seeded but drawn per pixel, so it depends on size). Taller or shorter relative to width → rescaled, a different-looking image. |
-| `look.whispiness` | Default `0` (the plain fluid, unchanged). Above 0 it adds seed-derived soft petals over the gradient; store the value with the seed. The petals' layout depends on the aspect ratio, so the "left square of a wide render" property above does not hold for whispiness above 0. |
+| `look` (if not default) | Every knob changes the image. `look.sweep` (color drifted into soft, wispy folds) and `look.ground` (pale space for text, in the palette's lightest color) default to 0, the plain fluid. Above 0 the "left square of a wide render" property above no longer holds exactly. |
 | `accent`, `complement` (optional) | Mid-tone hex, and a vivid opposite-hue color built to stand out on the image, for chips and geometry. Both are derivable later from the palette name. |
 
 If "must never change" is a hard requirement, also store the rendered bytes. The renderer is frozen by design, but an encoder (sharp/libwebp) upgrade can still shift WebP bytes; stored bytes can't drift at all.
@@ -48,4 +48,4 @@ const contrastChip = paletteComplement(palette); // opposite hue, vivid — stan
 - **Importing the main entry in client or edge code.** It pulls in native binaries; use `/palettes` for colors.
 - **Re-deriving the palette from the seed on every read.** Works until an upgrade adds palettes; then some existing images change color.
 - **Assuming a new crop needs new art.** For a narrower variant (e.g. a square from a 1200×630 cover), render the same seed + palette at the new size: it matches the cover's left edge. Only a relatively taller variant changes the composition.
-- **Assuming text is readable on the image.** Ramps run light to dark, so no single text color is safe everywhere — put text on a scrim or a solid surface.
+- **Assuming text is readable on the image.** Ramps run light to dark, so no single text color is safe everywhere — put text on a scrim or a solid surface. `look.ground` opens pale space in the palette's lightest color, but the seed decides where it lands, so it helps text without guaranteeing a spot for it.

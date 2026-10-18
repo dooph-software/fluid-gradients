@@ -135,11 +135,17 @@ export const lookFlags = {
     describe: `${lookDescriptions.grainOpacity} Default ${defaultLook.grainOpacity}.`,
     parse: finiteNumber('grain-opacity'),
   },
-  whispiness: {
-    flag: 'whispiness',
+  sweep: {
+    flag: 'sweep',
     placeholder: '<0-1>',
-    describe: `${lookDescriptions.whispiness} Default ${defaultLook.whispiness}.`,
-    parse: unitInterval('whispiness'),
+    describe: `${lookDescriptions.sweep} Default ${defaultLook.sweep}.`,
+    parse: unitInterval('sweep'),
+  },
+  ground: {
+    flag: 'ground',
+    placeholder: '<0-1>',
+    describe: `${lookDescriptions.ground} Default ${defaultLook.ground}.`,
+    parse: unitInterval('ground'),
   },
 } satisfies { [K in keyof GradientLook]: FlagSpec<number> };
 

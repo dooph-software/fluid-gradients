@@ -41,6 +41,7 @@ import {
   paletteAccent,
   paletteComplement,
   pickPalette,
+  renderMeshGradient,
   validatePalette,
 } from '../dist/index.js';
 
@@ -197,33 +198,63 @@ test('png output honors custom size', async () => {
   assert.equal(result.width, 64);
 });
 
-test('whispiness 0 is byte-identical to omitting it, including the Aspect fixture', async () => {
+test('sweep and ground at 0 are byte-identical to omitting them, including the Aspect fixture', async () => {
   const fixture = readFileSync(new URL('./fixtures/jewel-peacock-aspect.webp', import.meta.url));
   const explicit = await generateMeshGradient({
     seed: 'aspect',
     palette: 'jewel-peacock',
-    look: { whispiness: 0 },
+    look: { sweep: 0, ground: 0 },
   });
-  assert.ok(explicit.buffer.equals(fixture), 'whispiness: 0 changed the default render');
+  assert.ok(explicit.buffer.equals(fixture), 'sweep: 0 / ground: 0 changed the default render');
 });
 
-test('whispiness is deterministic per seed, changes the image, and rejects out-of-range values', async () => {
+test('sweep and ground are deterministic, change the image, and reject out-of-range values', async () => {
   const base = { palette: 'tulip-blur', format: 'png', width: 96, height: 120 };
-  const plain = await generateMeshGradient({ ...base, seed: 'w' });
-  const a = await generateMeshGradient({ ...base, seed: 'w', look: { whispiness: 0.8 } });
-  const b = await generateMeshGradient({ ...base, seed: 'w', look: { whispiness: 0.8 } });
-  const other = await generateMeshGradient({ ...base, seed: 'w2', look: { whispiness: 0.8 } });
-  const half = await generateMeshGradient({ ...base, seed: 'w', look: { whispiness: 0.4 } });
-  assert.ok(a.buffer.equals(b.buffer), 'same seed + whispiness must render the same bytes');
-  assert.ok(!a.buffer.equals(plain.buffer), 'whispiness should change the image');
-  assert.ok(!a.buffer.equals(half.buffer), 'whispiness amounts should differ');
-  assert.ok(!a.buffer.equals(other.buffer), 'a different seed should lay out different petals');
-  for (const bad of [-0.1, 1.1, Number.NaN]) {
-    await assert.rejects(
-      generateMeshGradient({ ...base, seed: 'w', look: { whispiness: bad } }),
-      /whispiness must be between 0 and 1/,
-    );
+  const plain = await generateMeshGradient({ ...base, seed: 's' });
+  const swept = await generateMeshGradient({ ...base, seed: 's', look: { sweep: 0.7 } });
+  const again = await generateMeshGradient({ ...base, seed: 's', look: { sweep: 0.7 } });
+  const lighter = await generateMeshGradient({ ...base, seed: 's', look: { sweep: 0.3 } });
+  const grounded = await generateMeshGradient({ ...base, seed: 's', look: { ground: 0.5 } });
+  assert.ok(swept.buffer.equals(again.buffer), 'same seed + sweep must render the same bytes');
+  assert.ok(!swept.buffer.equals(plain.buffer), 'sweep should change the image');
+  assert.ok(!swept.buffer.equals(lighter.buffer), 'sweep amounts should differ');
+  assert.ok(!grounded.buffer.equals(plain.buffer), 'ground should change the image');
+  for (const knob of ['sweep', 'ground']) {
+    for (const bad of [-0.1, 1.1, Number.NaN]) {
+      await assert.rejects(
+        generateMeshGradient({ ...base, seed: 's', look: { [knob]: bad } }),
+        new RegExp(`look.${knob} must be between 0 and 1`),
+      );
+    }
   }
+});
+
+// `ground` sets a floor on how much of the image is near-lightest-stop, not an
+// increment: areas the fluid already left light count toward the share.
+test('ground opens roughly its share of the image to the lightest stop', async () => {
+  const palette = findPalette('jewel-peacock');
+  const [lightR, lightG, lightB] = [1, 3, 5].map((i) => parseInt(palette.colors[0].slice(i, i + 2), 16));
+  const groundShare = async (ground) => {
+    const { canvas } = await renderMeshGradient({
+      seed: 'g',
+      palette: palette.name,
+      width: 120,
+      height: 150,
+      look: { ground, grainOpacity: 0 },
+    });
+    const { data } = canvas.getContext('2d').getImageData(0, 0, 120, 150);
+    let near = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      const distance = Math.hypot(data[i] - lightR, data[i + 1] - lightG, data[i + 2] - lightB);
+      if (distance < 12) near++;
+    }
+    return near / (data.length / 4);
+  };
+  const none = await groundShare(0);
+  const half = await groundShare(0.5);
+  const most = await groundShare(1);
+  assert.ok(half > none && half > 0.4, `ground 0.5 should open space (${none} → ${half})`);
+  assert.ok(most > half && most > 0.8, `ground 1 should open most of it (${half} → ${most})`);
 });
 
 // ── CLI ────────────────────────────────────────────────────────────────────
@@ -313,26 +344,9 @@ test('runCli rejects conflicting palette-source flags', async () => {
   await assert.rejects(runCli(['--random-palette', '--chaos']), /cannot be combined/);
 });
 
-test('runCli --whispiness composes with the palette flags and stays deterministic', async () => {
-  const dir = mkdtempSync(join(tmpdir(), 'fluid-cli-'));
-  const args = ['--width', '24', '--height', '30', '--seed', 'fixed', '--whispiness', '0.7'];
-  const run = (extra, name) => runJson([...args, ...extra, '--out', join(dir, name)]);
-  const a = await run(['--palette', 'silk-rose'], 'a.png');
-  const b = await run(['--palette', 'silk-rose'], 'b.png');
-  assert.equal(a.palette, 'silk-rose');
-  assert.equal(a.bytes, b.bytes);
-  assert.equal((await run(['--chaos'], 'c.png')).palette, 'chaos');
-  assert.ok((await run(['--random-palette'], 'd.png')).palette);
-  const plain = await runJson(['--width', '24', '--height', '30', '--seed', 'fixed', '--palette', 'silk-rose', '--out', join(dir, 'e.png')]);
-  assert.notEqual(a.bytes, plain.bytes);
-  rmSync(dir, { recursive: true, force: true });
-});
-
 test('runCli rejects bad flag values through the flag specs', async () => {
   await assert.rejects(runCli(['--width', '0']), /--width must be a positive integer/);
   await assert.rejects(runCli(['--grain-opacity', 'abc']), /--grain-opacity must be a number/);
+  await assert.rejects(runCli(['--sweep', '2']), /--sweep must be a number from 0 to 1/);
   await assert.rejects(runCli(['--out', 'x.gif']), /must end in .webp or .png/);
-  for (const bad of ['1.5', '-1', 'abc', '']) {
-    await assert.rejects(runCli([`--whispiness=${bad}`]), /--whispiness must be a number from 0 to 1/);
-  }
 });

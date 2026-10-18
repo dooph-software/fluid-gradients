@@ -127,7 +127,17 @@ Use `renderMeshGradient(options)` to get the raw `@napi-rs/canvas` canvas if you
 
 `look` overrides the rendering knobs. The defaults are exported as `defaultLook`:
 
-`whispiness` is the one knob that adds something instead of tuning the fluid: above 0, soft overlapping petals are composited over the gradient, in any palette (the palette's lightest stop becomes the pale ground, the rest become petal colors). At `0`, the default, nothing changes, byte for byte. The petal layout comes from the seed alone, so raising the value fades the same petals in. Unlike the fluid layer, the petals' placement depends on the aspect ratio, so changing it re-lays-out the petals.
+Two knobs add a second pass instead of tuning the fluid. **`sweep`** carries the color through a slow, drifting current like dye in water and softens it like a long exposure, so it pulls into curving wisps and silk-like folds. **`ground`** gives part of the image over to a pale ground in the palette's lightest color, so the color reads as floating over a background with room for text. Both are 0–1 and default to 0, where the image is byte-for-byte the plain fluid. They come from their own seeded stream, so raising one reshapes the same composition rather than starting a new one. They cost about a second at full size (1200×1500), and unlike the fluid, a wider render isn't exactly the left part of a narrower one.
+
+```ts
+import { generateMeshGradient } from "@dooph-software/fluid-gradients";
+
+const { buffer } = await generateMeshGradient({
+  seed: "post-42",
+  palette: "tulip-blur",
+  look: { sweep: 0.7, ground: 0.4 },
+});
+```
 
 <!-- docs:begin:look-knobs -->
 | Knob | Default | Effect |
@@ -137,7 +147,8 @@ Use `renderMeshGradient(options)` to get the raw `@napi-rs/canvas` canvas if you
 | `fractalOctaveCount` | `2` | More octaves add finer detail. |
 | `colorTransitionContrast` | `1.75` | Sharpness of the edges between colors. |
 | `grainOpacity` | `0.09` | Strength of the film-grain overlay. |
-| `whispiness` | `0` | Fades in soft, overlapping petals over the fluid, from 0 (none) to 1. |
+| `sweep` | `0` | Drifts the color into soft, curving wisps, like dye in water or folded silk, 0–1. 0 is the plain fluid. |
+| `ground` | `0` | Roughly the share of the image, 0–1, left as a pale ground in the palette's lightest color. |
 <!-- docs:end:look-knobs -->
 
 ## CLI
@@ -170,7 +181,8 @@ Options:
   --fractal-octave-count <n>       More octaves add finer detail. Default 2.
   --color-transition-contrast <n>  Sharpness of the edges between colors. Default 1.75.
   --grain-opacity <0-1>            Strength of the film-grain overlay. Default 0.09.
-  --whispiness <0-1>               Fades in soft, overlapping petals over the fluid, from 0 (none) to 1. Default 0.
+  --sweep <0-1>                    Drifts the color into soft, curving wisps, like dye in water or folded silk, 0–1. 0 is the plain fluid. Default 0.
+  --ground <0-1>                   Roughly the share of the image, 0–1, left as a pale ground in the palette's lightest color. Default 0.
 
 Output & info:
   --out <path>                     Output file, .webp or .png. Default: output/<palette>-<seed>.webp
