@@ -11,7 +11,10 @@
  *   given, so a fixed composition can be tried in many palettes; the picked name
  *   is printed. `--chaos` replaces the palette with 3–5 random hex colors drawn
  *   from the seed (`<seed>::chaos`), so the same seed gives the same colors.
- *   Both conflict with `--palette` and with each other, and throw.
+ *   `--colors` takes the caller's own 3–5 comma-separated hex colors (the `#` is
+ *   optional) as a palette named `custom`. All four palette sources (`--palette`,
+ *   `--random-palette`, `--chaos`, `--colors`) are mutually exclusive and throw
+ *   when combined.
  * - Output format comes from the `--out` extension; anything but `.webp` or
  *   `.png` throws.
  *
@@ -43,6 +46,7 @@ import {
   generateMeshGradient,
   hashStringToInt,
   pickPalette,
+  validatePalette,
   type Palette,
   type PaletteColors,
 } from './index';
@@ -72,11 +76,10 @@ ${cliOnlyFlags.map(line).join('\n')}
 
 const parseOptions: ParseArgsConfig['options'] = {
   ...Object.fromEntries(allFlags.map((f) => [f.flag, { type: 'string' as const }])),
-  out: { type: 'string' },
-  json: { type: 'boolean' },
-  'list-palettes': { type: 'boolean' },
-  'random-palette': { type: 'boolean' },
-  chaos: { type: 'boolean' },
+  // A CLI-only flag with a placeholder takes a value; one without is a switch.
+  ...Object.fromEntries(
+    cliOnlyFlags.map((f) => [f.flag, { type: f.placeholder ? ('string' as const) : ('boolean' as const) }]),
+  ),
   help: { type: 'boolean', short: 'h' },
 };
 
@@ -91,6 +94,22 @@ function chaosPalette(seed: string): Palette {
     return `#${channels.join('')}` as const;
   }) as unknown as PaletteColors;
   return { name: 'chaos', colors };
+}
+
+/** `--colors "#aabbcc, ddeeff, ..."` → a palette named `custom`, validated with `--colors` errors. */
+function customPalette(raw: string): Palette {
+  const colors = raw
+    .split(',')
+    .map((c) => c.trim())
+    .filter((c) => c.length > 0)
+    .map((c) => (c.startsWith('#') ? c : `#${c}`).toLowerCase()) as unknown as PaletteColors;
+  const palette: Palette = { name: 'custom', colors };
+  try {
+    validatePalette(palette);
+  } catch (err) {
+    throw new Error((err as Error).message.replace('Palette "custom"', '--colors'));
+  }
+  return palette;
 }
 
 /** What a flag's own `parse` returns, e.g. `width` → number. */
@@ -134,19 +153,23 @@ export async function runCli(argv: string[]): Promise<void> {
   // as in the API. Both are printed, so any result can be reproduced.
   const seed = read('seed') ?? randomBytes(4).toString('hex');
   const paletteName = read('palette');
-  if (paletteName !== undefined && (values['random-palette'] || values.chaos)) {
-    throw new Error('--palette cannot be combined with --random-palette or --chaos.');
+  const customColors = raw('colors');
+  const sources = (['palette', 'random-palette', 'chaos', 'colors'] as const).filter(
+    (flag) => values[flag] !== undefined && values[flag] !== false,
+  );
+  if (sources.length > 1) {
+    throw new Error(`${sources.map((f) => `--${f}`).join(' and ')} cannot be combined.`);
   }
-  if (values['random-palette'] && values.chaos) {
-    throw new Error('--random-palette and --chaos cannot be combined.');
-  }
-  const palette = values.chaos
-    ? chaosPalette(seed)
-    : values['random-palette']
-      ? colorPalettes[randomInt(colorPalettes.length)]
-      : paletteName === undefined
-        ? pickPalette(seed)
-        : findPalette(paletteName);
+  const palette =
+    customColors !== undefined
+      ? customPalette(customColors)
+      : values.chaos
+        ? chaosPalette(seed)
+        : values['random-palette']
+          ? colorPalettes[randomInt(colorPalettes.length)]
+          : paletteName === undefined
+            ? pickPalette(seed)
+            : findPalette(paletteName);
   const out = raw('out') ?? join('output', `${palette.name}-${seed}.webp`);
 
   const extension = extname(out).toLowerCase();
@@ -175,7 +198,9 @@ export async function runCli(argv: string[]): Promise<void> {
   } else {
     console.log(`✓ ${out} (${(result.buffer.length / 1024).toFixed(2)} KB)`);
     console.log(`  seed: ${result.seed}`);
-    if (values.chaos) console.log(`  colors: ${result.palette.colors.join(' ')}`);
+    if (values.chaos || customColors !== undefined) {
+      console.log(`  colors: ${result.palette.colors.join(' ')}`);
+    }
     console.log(`  palette: ${result.palette.name} (accent: ${result.accent}, complement: ${result.complement})`);
   }
 }

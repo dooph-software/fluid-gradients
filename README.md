@@ -35,6 +35,7 @@ It asks which agent directories to install to (`.agents/`, `.claude/`, `.agent/`
     <td align="center"><img src="./examples/featured/onyx-gold-the-weeknd.webp" width="240" alt="onyx-gold"><br><code>onyx-gold</code> · seed <code>the-weeknd</code><br><sub>gravity</sub></td>
     <td align="center"><img src="./examples/featured/cobalt-ice-aspect.webp" width="240" alt="cobalt-ice"><br><code>cobalt-ice</code> · seed <code>aspect</code><br><sub>cirrus</sub></td>
     <td align="center"><img src="./examples/featured/burgundy-velvet-burgundy-velvet.webp" width="240" alt="burgundy-velvet"><br><code>burgundy-velvet</code> · seed <code>burgundy-velvet</code><br><sub>silk</sub></td>
+    <td align="center"><img src="./examples/featured/custom-atlantic.webp" width="240" alt="atlantic"><br><code>--colors "002654,DBDBDB,CE1126"</code> · seed <code>8c218099</code>· fractal-octave-count <code>6</code><br><sub>atlantic</sub></td>
   </tr>
 </table>
 <!-- docs:end:featured -->
@@ -140,15 +141,17 @@ const { buffer } = await generateMeshGradient({
 ```
 
 <!-- docs:begin:look-knobs -->
-| Knob | Default | Effect |
-| --- | --- | --- |
-| `baseNoiseFrequency` | `0.3` | Lower values give broader, softer color regions. |
-| `domainWarpStrength` | `1` | How much the color field swirls. |
-| `fractalOctaveCount` | `2` | More octaves add finer detail. |
-| `colorTransitionContrast` | `1.75` | Sharpness of the edges between colors. |
-| `grainOpacity` | `0.09` | Strength of the film-grain overlay. |
-| `sweep` | `0` | Drifts the color into soft, curving wisps, like dye in water or folded silk, 0–1. 0 is the plain fluid. |
-| `ground` | `0` | Roughly the share of the image, 0–1, left as a pale ground in the palette's lightest color. |
+
+| Knob                      | Default | Effect                                                                                                  |
+| ------------------------- | ------- | ------------------------------------------------------------------------------------------------------- |
+| `baseNoiseFrequency`      | `0.3`   | Lower values give broader, softer color regions.                                                        |
+| `domainWarpStrength`      | `1`     | How much the color field swirls.                                                                        |
+| `fractalOctaveCount`      | `2`     | More octaves add finer detail.                                                                          |
+| `colorTransitionContrast` | `1.75`  | Sharpness of the edges between colors.                                                                  |
+| `grainOpacity`            | `0.09`  | Strength of the film-grain overlay.                                                                     |
+| `sweep`                   | `0`     | Drifts the color into soft, curving wisps, like dye in water or folded silk, 0–1. 0 is the plain fluid. |
+| `ground`                  | `0`     | Roughly the share of the image, 0–1, left as a pale ground in the palette's lightest color.             |
+
 <!-- docs:end:look-knobs -->
 
 ## CLI
@@ -164,6 +167,7 @@ npx fluid-gradient --list-palettes
 ```
 
 <!-- docs:begin:cli-help -->
+
 ```text
 Usage: fluid-gradient [options]
 
@@ -192,6 +196,7 @@ Output & info:
   --list-palettes                  Print built-in palette names and exit.
   --help                           Show this help (-h).
 ```
+
 <!-- docs:end:cli-help -->
 
 Flags are defined once in [src/flags.ts](src/flags.ts) and the CLI builds its parser, help text and options from that table. The table is typed as "one entry per render option", so adding an option to the API fails the typecheck until it has a flag — the CLI and the TS API can't drift. `--out`, `--json`, `--list-palettes` and `--help` are CLI-only, since they're file output and terminal display.

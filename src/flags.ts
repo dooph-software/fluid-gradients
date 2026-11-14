@@ -6,8 +6,9 @@
  *   with the parser/validator for that flag's value living beside it.
  * - `cliOnlyFlags` holds the flags with no API counterpart: file output,
  *   terminal presentation, and the palette-source switches (`--random-palette`,
- *   `--chaos`), which the CLI resolves into an ordinary `palette` before calling
- *   the API.
+ *   `--chaos`, `--colors`), which the CLI resolves into an ordinary `palette`
+ *   before calling the API. An entry with an empty `placeholder` is a boolean
+ *   switch; one with a placeholder takes a string value.
  * - `src/cli.ts` builds its `parseArgs` config, its help text and its options
  *   object from these tables. `format` is absent on purpose — it comes from the
  *   `--out` extension.
@@ -165,6 +166,11 @@ export const cliOnlyFlags = [
     flag: 'chaos',
     placeholder: '',
     describe: 'Ignore the palettes: use 3–5 random colors (the same --seed gives the same colors).',
+  },
+  {
+    flag: 'colors',
+    placeholder: '<hex,...>',
+    describe: 'Use your own 3–5 colors, light → dark, comma-separated: "#fdf6ee,#f2c4ce,#3f6fd8". The # is optional.',
   },
   { flag: 'json', placeholder: '', describe: 'Print result metadata as JSON.' },
   { flag: 'list-palettes', placeholder: '', describe: 'Print built-in palette names and exit.' },

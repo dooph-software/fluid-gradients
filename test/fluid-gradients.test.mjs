@@ -338,10 +338,35 @@ test('runCli --random-palette ignores the seed-derived pick; --chaos is seed-det
   rmSync(dir, { recursive: true, force: true });
 });
 
+test('runCli --colors renders the given colors, with or without #', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'fluid-cli-'));
+  const args = ['--width', '4', '--height', '4', '--seed', 'fixed'];
+  const colors = ['#fdf6ee', '#f2c4ce', '#3f6fd8', '#0b1d3a'];
+  const expected = { name: 'custom', colors };
+  const a = await runJson([...args, '--colors', colors.join(','), '--out', join(dir, 'a.png')]);
+  const b = await runJson([...args, '--colors', 'FDF6EE, f2c4ce, 3f6fd8, 0b1d3a', '--out', join(dir, 'b.png')]);
+  rmSync(dir, { recursive: true, force: true });
+  assert.equal(a.palette, 'custom');
+  assert.equal(a.accent, paletteAccent(expected));
+  assert.equal(a.complement, paletteComplement(expected));
+  assert.equal(b.accent.toLowerCase(), a.accent.toLowerCase());
+  assert.equal(b.complement, a.complement);
+});
+
+test('runCli rejects bad --colors values', async () => {
+  await assert.rejects(runCli(['--colors', '#ffffff,#000000']), /--colors needs 3–5 colors/);
+  await assert.rejects(runCli(['--colors', '#fff,#000000,#123456']), /--colors has an invalid color "#fff"/);
+  await assert.rejects(runCli(['--colors', '']), /--colors needs 3–5 colors/);
+});
+
 test('runCli rejects conflicting palette-source flags', async () => {
   await assert.rejects(runCli(['--palette', 'mint-sea', '--chaos']), /cannot be combined/);
   await assert.rejects(runCli(['--palette', 'mint-sea', '--random-palette']), /cannot be combined/);
   await assert.rejects(runCli(['--random-palette', '--chaos']), /cannot be combined/);
+  const colors = '#ffffff,#888888,#000000';
+  await assert.rejects(runCli(['--colors', colors, '--palette', 'mint-sea']), /cannot be combined/);
+  await assert.rejects(runCli(['--colors', colors, '--chaos']), /cannot be combined/);
+  await assert.rejects(runCli(['--colors', colors, '--random-palette']), /cannot be combined/);
 });
 
 test('runCli rejects bad flag values through the flag specs', async () => {
